@@ -26,7 +26,7 @@ exports.newProduct = catchAsyncErrors(async (req, res, next) => {
 // Get all products
 exports.getProducts = catchAsyncErrors(async (req, res, next) => {
   const resPerPage = 4;
-  const productCount = await Product.countDocuments();
+  const productsCount = await Product.countDocuments();
 
   const apiFeatures = new APIFeatures(
     Product.find().populate("category", "name"),
@@ -40,15 +40,17 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    count: products.length,
-    productCount,
+    productsCount,
     products,
   });
 });
 
 // Get single product details
 exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById(req.params.id).populate("category", "name");
+  const product = await Product.findById(req.params.id).populate(
+    "category",
+    "name"
+  );
 
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
